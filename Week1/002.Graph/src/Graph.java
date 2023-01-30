@@ -44,7 +44,6 @@ public class Graph extends Application {
             float y = (float) Math.pow(x, 3);
             graphics.draw(new Line2D.Double(x * scale, y * scale, (x - resolution) * scale, lastY * scale));
             lastY = y;
-            // just a test commitasdf asdf
         }
 
     }
