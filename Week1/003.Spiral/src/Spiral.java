@@ -18,8 +18,7 @@ public class Spiral extends Application {
         primaryStage.setTitle("Spiral");
         primaryStage.show();
     }
-    
-    
+
     public void draw(FXGraphics2D graphics) {
         graphics.translate(canvas.getWidth()/2, canvas.getHeight()/2);
         graphics.scale( 1, -1);
@@ -44,9 +43,10 @@ public class Spiral extends Application {
             LastY = y;
         }
 
+
     }
-    
-    
+
+
     
     public static void main(String[] args) {
         launch(Spiral.class);
