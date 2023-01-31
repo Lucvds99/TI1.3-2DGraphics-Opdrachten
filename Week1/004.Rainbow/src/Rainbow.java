@@ -34,7 +34,7 @@ public class Rainbow extends Application {
         float radiusBuiten = (float) 700;
 
         //the increment is the amount of color spread over the sphere
-        float increment = ((float)500.0/((float)Math.PI)*(float)(Math.PI));
+        float increment = ((float)500.0/((float)Math.PI));
         for(float i = 0; i < Math.PI; i+= resolution) {
             graphics.setColor(Color.getHSBColor(i*increment/500f, 1, 1));
             float x1 = radiusBinnen * (float)Math.cos(i);
