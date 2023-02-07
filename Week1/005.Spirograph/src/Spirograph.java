@@ -63,7 +63,7 @@ public class Spirograph extends Application {
             float oldX1=0;
             float oldY1=0;
 
-            for (float i = 0; i < Math.PI * Math.PI; i+=0.0001) {
+            for (float i = 0; i < 2 * Math.PI; i+=0.0001) {
 
                 float x1 = (float)(Double.parseDouble(v1.getText()) * Math.cos(Double.parseDouble(v2.getText())*i)  + Double.parseDouble(v3.getText()) * Math.cos(Double.parseDouble(v4.getText())*i));
                 float y1 = (float)(Double.parseDouble(v1.getText()) * Math.sin(Double.parseDouble(v2.getText())*i)  + Double.parseDouble(v3.getText()) * Math.sin(Double.parseDouble(v4.getText())*i));
