@@ -37,8 +37,8 @@ public class Moon extends Application {
         GeneralPath path = new GeneralPath();
         path.moveTo(100, 120);
 
-        path.quadTo(220,200, 90, 300);
-        path.quadTo(150,200, 100, 120);
+        path.curveTo(200,150, 200, 250, 100, 300);
+        path.curveTo(150,250, 150, 150, 100 ,120);
         path.closePath();
 
 

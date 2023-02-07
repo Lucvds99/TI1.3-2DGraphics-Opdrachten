@@ -27,14 +27,45 @@ public class YingYang extends Application {
         draw(new FXGraphics2D(canvas.getGraphicsContext2D()));
     }
 
-
     public void draw(FXGraphics2D graphics)
     {
+
         graphics.setTransform(new AffineTransform());
         graphics.setBackground(Color.white);
-        graphics.clearRect(0, 0, (int) canvas.getWidth(), (int) canvas.getHeight());
-    }
+        Area cirkel = new Area(new Ellipse2D.Double(200, 150, 300, 300));
+        //150 |75 200 + 150 - 75 = 350 - 75 = 275
+        Area topCircel = new Area(new Ellipse2D.Double(275, 150, 150, 150));
 
+        Area smallTopCircel = new Area(new Ellipse2D.Double(325, 200, 50, 50 ));
+
+        Area smallBottomCircel = new Area(new Ellipse2D.Double(325, 350, 50 , 50));
+
+        Area buttomCirkel = new Area(new Ellipse2D.Double(275, 300, 150, 150));
+
+        Area rectangle = new Area(new Rectangle2D.Double(350, 150, 150, 300));
+
+        graphics.clearRect(0, 0, (int) canvas.getWidth(), (int) canvas.getHeight());
+        rectangle.subtract(topCircel);
+
+        rectangle.intersect(cirkel);
+
+        topCircel.add(cirkel);
+
+        graphics.setColor(Color.black);
+        graphics.draw(cirkel);
+        graphics.draw(topCircel);
+        graphics.fill(buttomCirkel);
+        graphics.draw(buttomCirkel);
+        graphics.fill(rectangle);
+        graphics.draw(rectangle);
+        graphics.fill(smallTopCircel);
+        graphics.draw(smallTopCircel);
+
+        graphics.setColor(Color.white);
+        graphics.fill(smallBottomCircel);
+        graphics.draw(smallBottomCircel);
+
+    }
 
     public static void main(String[] args)
     {
