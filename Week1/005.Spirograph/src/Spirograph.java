@@ -2,9 +2,10 @@ import java.awt.*;
 import java.awt.geom.*;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
-import javafx.scene.Group;
+import javafx.scene.*;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.control.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
@@ -19,13 +20,13 @@ public class Spirograph extends Application {
     private TextField v4;
     private Button add;
     private boolean isTranslated;
+    private CheckBox color;
 
     
     @Override
     public void start(Stage primaryStage) throws Exception {
         Canvas canvas = new Canvas(1920, 1080);
         isTranslated = false;
-
        
         VBox mainBox = new VBox();
         HBox topBar = new HBox();
@@ -35,9 +36,10 @@ public class Spirograph extends Application {
         topBar.getChildren().add(v1 = new TextField("500"));
         topBar.getChildren().add(v2 = new TextField("1"));
         topBar.getChildren().add(v3 = new TextField("300"));
-        topBar.getChildren().add(v4 = new TextField("1"));
+        topBar.getChildren().add(v4 = new TextField("10"));
 
         topBar.getChildren().add(add = new Button("add"));
+        topBar.getChildren().add(color = new CheckBox("color"));
 
         v1.textProperty().addListener(e -> draw(new FXGraphics2D(canvas.getGraphicsContext2D())));
         v2.textProperty().addListener(e -> draw(new FXGraphics2D(canvas.getGraphicsContext2D())));
@@ -49,8 +51,7 @@ public class Spirograph extends Application {
         primaryStage.setTitle("Spirograph");
         primaryStage.show();
     }
-    
-    
+
     public void draw(FXGraphics2D graphics) {
         if (!isTranslated){
             graphics.translate(1920/2,(1000/2));
@@ -80,7 +81,9 @@ public class Spirograph extends Application {
                 oldX1 = x1;
                 oldY1 = y1;
 
-                graphics.setColor(Color.getHSBColor(i/(float)Math.PI, 1, 1));
+                if (color.isSelected()){
+                    graphics.setColor(Color.getHSBColor(i/(float)Math.PI, 1, 1));
+                }
                 graphics.draw(new Line2D.Double(x1, y1, x2, y2));
             }
         });
