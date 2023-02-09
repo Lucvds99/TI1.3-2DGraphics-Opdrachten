@@ -35,6 +35,8 @@ public class Colors extends Application {
         graphics.clearRect(0, 0, (int) canvas.getWidth(), (int) canvas.getHeight());
     }
 
+    // just cheking if this works cause i will commit it lol
+
 
     public static void main(String[] args)
     {
