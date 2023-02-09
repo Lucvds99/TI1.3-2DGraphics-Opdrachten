@@ -46,9 +46,7 @@ public class YingYang extends Application {
 
         graphics.clearRect(0, 0, (int) canvas.getWidth(), (int) canvas.getHeight());
         rectangle.subtract(topCircel);
-
         rectangle.intersect(cirkel);
-
         topCircel.add(cirkel);
 
         graphics.setColor(Color.black);
