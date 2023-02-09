@@ -16,8 +16,7 @@ public class YingYang extends Application {
     private ResizableCanvas canvas;
 
     @Override
-    public void start(Stage primaryStage) throws Exception
-    {
+    public void start(Stage primaryStage) throws Exception {
         BorderPane mainPane = new BorderPane();
         canvas = new ResizableCanvas(g -> draw(g), mainPane);
         mainPane.setCenter(canvas);
@@ -27,18 +26,16 @@ public class YingYang extends Application {
         draw(new FXGraphics2D(canvas.getGraphicsContext2D()));
     }
 
-    public void draw(FXGraphics2D graphics)
-    {
-
+    void draw(FXGraphics2D graphics) {
         graphics.setTransform(new AffineTransform());
         graphics.setBackground(Color.white);
         Area cirkel = new Area(new Ellipse2D.Double(200, 150, 300, 300));
         //150 |75 200 + 150 - 75 = 350 - 75 = 275
         Area topCircel = new Area(new Ellipse2D.Double(275, 150, 150, 150));
 
-        Area smallTopCircel = new Area(new Ellipse2D.Double(325, 200, 50, 50 ));
+        Area smallTopCircel = new Area(new Ellipse2D.Double(325, 200, 50, 50));
 
-        Area smallBottomCircel = new Area(new Ellipse2D.Double(325, 350, 50 , 50));
+        Area smallBottomCircel = new Area(new Ellipse2D.Double(325, 350, 50, 50));
 
         Area buttomCirkel = new Area(new Ellipse2D.Double(275, 300, 150, 150));
 
@@ -64,11 +61,9 @@ public class YingYang extends Application {
         graphics.setColor(Color.white);
         graphics.fill(smallBottomCircel);
         graphics.draw(smallBottomCircel);
-
     }
 
-    public static void main(String[] args)
-    {
+    public static void main(String[] args) {
         launch(YingYang.class);
     }
 
