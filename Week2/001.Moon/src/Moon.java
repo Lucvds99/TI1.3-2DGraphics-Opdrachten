@@ -43,7 +43,7 @@ public class Moon extends Application {
 
 
         graphics.setColor(Color.black);
-        graphics    .fill(path);
+        graphics.fill(path);
         graphics.setColor(Color.black);
         graphics.draw(path);
     }

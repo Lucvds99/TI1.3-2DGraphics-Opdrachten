@@ -33,10 +33,33 @@ public class Colors extends Application {
         graphics.setTransform(new AffineTransform());
         graphics.setBackground(Color.white);
         graphics.clearRect(0, 0, (int) canvas.getWidth(), (int) canvas.getHeight());
+        graphics.translate(1900 /2, 1080/2);
+        graphics.scale(10, 10);
+
+        Color[] colors = new Color[]{
+                Color.black,
+                Color.blue,
+                Color.cyan,
+                Color.darkGray,
+                Color.gray,
+                Color.green,
+                Color.lightGray,
+                Color.magenta,
+                Color.orange,
+                Color.pink,
+                Color.red,
+                Color.white,
+                Color.yellow
+        };
+
+
+        for (int i = 0; i < colors.length; i++) {
+            graphics.setColor(colors[i]);
+            Area area = new Area(new Rectangle2D.Double((i*10), 10, 10, 10));
+            graphics.fill(area);
+            graphics.draw(area);
+        }
     }
-
-    // just cheking if this works cause i will commit it lol
-
 
     public static void main(String[] args)
     {
