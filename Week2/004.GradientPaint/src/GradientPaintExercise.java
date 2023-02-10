@@ -1,4 +1,6 @@
 import java.awt.*;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.awt.geom.*;
 import java.lang.reflect.Array;
 
@@ -8,6 +10,7 @@ import static javafx.application.Application.launch;
 
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.input.MouseDragEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import org.jfree.fx.FXGraphics2D;
@@ -15,13 +18,20 @@ import org.jfree.fx.ResizableCanvas;
 
 public class GradientPaintExercise extends Application {
     private ResizableCanvas canvas;
+    private boolean translated = false;
+    private Point2D mouse = new Point2D.Double(0,0);
 
     @Override
-    public void start(Stage primaryStage) throws Exception
-    {
+    public void start(Stage primaryStage) throws Exception {
         BorderPane mainPane = new BorderPane();
         canvas = new ResizableCanvas(g -> draw(g), mainPane);
+
+
         mainPane.setCenter(canvas);
+        canvas.setOnMouseDragged(event -> {
+            mouse = new Point2D.Double(event.getX(), event.getY());
+            draw(new FXGraphics2D(canvas.getGraphicsContext2D()));
+        });
         primaryStage.setScene(new Scene(mainPane));
         primaryStage.setTitle("GradientPaint");
         primaryStage.show();
@@ -29,13 +39,15 @@ public class GradientPaintExercise extends Application {
     }
 
 
-    public void draw(FXGraphics2D graphics)
-    {
-        graphics.scale(1,1);
-        graphics.translate(1920/2, 1080/2);
+    public void draw(FXGraphics2D graphics) {
+        graphics.clearRect(0, 0, (int) canvas.getWidth(), (int) canvas.getHeight());
         graphics.setTransform(new AffineTransform());
         graphics.setBackground(Color.white);
-        graphics.clearRect(0, 0, (int) canvas.getWidth(), (int) canvas.getHeight());
+        if (!translated) {
+            graphics.scale(1, 1);
+            graphics.translate(1920 / 2, 1080 / 2);
+            translated = true;
+        }
 
 
         float[] fractions = new float[]{
@@ -45,27 +57,24 @@ public class GradientPaintExercise extends Application {
         };
 
 
-
         Color[] colors = new Color[]{
                 Color.CYAN,
                 Color.MAGENTA,
                 Color.gray
         };
 
+        Rectangle2D.Double rect = new Rectangle2D.Double(-1000, -1000, 1000, 1000);
 
+        RadialGradientPaint radialGradientPaint = new RadialGradientPaint(mouse, 600f, mouse, fractions, colors, MultipleGradientPaint.CycleMethod.NO_CYCLE);
 
-        RadialGradientPaint radialGradientPaint = new RadialGradientPaint((float)canvas.getWidth()/2,(float)canvas.getHeight()/2 , 600, fractions, colors);
-
-
-        Area area = new Area(new Rectangle2D.Double(-80000,-80000, 80000, 80000));
-        graphics.fill(area);
         graphics.setPaint(radialGradientPaint);
-        graphics.draw(area);
+        graphics.fill(rect);
+        graphics.draw(rect);
+
     }
 
 
-    public static void main(String[] args)
-    {
+    public static void main(String[] args) {
         launch(GradientPaintExercise.class);
     }
 
