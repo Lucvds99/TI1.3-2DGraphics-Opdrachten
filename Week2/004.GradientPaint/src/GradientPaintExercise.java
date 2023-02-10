@@ -1,5 +1,6 @@
 import java.awt.*;
 import java.awt.geom.*;
+import java.lang.reflect.Array;
 
 import javafx.application.Application;
 
@@ -30,9 +31,36 @@ public class GradientPaintExercise extends Application {
 
     public void draw(FXGraphics2D graphics)
     {
+        graphics.scale(1,1);
+        graphics.translate(1920/2, 1080/2);
         graphics.setTransform(new AffineTransform());
         graphics.setBackground(Color.white);
         graphics.clearRect(0, 0, (int) canvas.getWidth(), (int) canvas.getHeight());
+
+
+        float[] fractions = new float[]{
+                0.44f,
+                0.77f,
+                0.99f
+        };
+
+
+
+        Color[] colors = new Color[]{
+                Color.CYAN,
+                Color.MAGENTA,
+                Color.gray
+        };
+
+
+
+        RadialGradientPaint radialGradientPaint = new RadialGradientPaint((float)canvas.getWidth()/2,(float)canvas.getHeight()/2 , 600, fractions, colors);
+
+
+        Area area = new Area(new Rectangle2D.Double(-80000,-80000, 80000, 80000));
+        graphics.fill(area);
+        graphics.setPaint(radialGradientPaint);
+        graphics.draw(area);
     }
 
 
