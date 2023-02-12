@@ -38,7 +38,6 @@ public class GradientPaintExercise extends Application {
         draw(new FXGraphics2D(canvas.getGraphicsContext2D()));
     }
 
-
     public void draw(FXGraphics2D graphics) {
         graphics.clearRect(0, 0, (int) canvas.getWidth(), (int) canvas.getHeight());
         graphics.setTransform(new AffineTransform());
@@ -48,7 +47,6 @@ public class GradientPaintExercise extends Application {
             graphics.translate(1920 / 2, 1080 / 2);
             translated = true;
         }
-
 
         float[] fractions = new float[]{
                 0.44f,
