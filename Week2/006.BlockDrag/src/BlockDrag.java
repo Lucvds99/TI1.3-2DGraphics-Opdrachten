@@ -49,6 +49,7 @@ public class BlockDrag extends Application {
         graphics.clearRect(0, 0, (int) canvas.getWidth(), (int) canvas.getHeight());
 
         for (Renderable renderable : renderables) {
+
             graphics.setColor(renderable.getColor());
             graphics.fill(renderable.getTransformedShape());
             renderable.draw(graphics);
