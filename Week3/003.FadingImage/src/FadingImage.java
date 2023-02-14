@@ -2,8 +2,12 @@ import java.awt.*;
 import java.awt.geom.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.nio.Buffer;
+
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
+
+import static com.sun.javafx.scene.control.skin.Utils.getResource;
 import static javafx.application.Application.launch;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -15,6 +19,9 @@ import org.jfree.fx.ResizableCanvas;
 
 public class FadingImage extends Application {
     private ResizableCanvas canvas;
+    private BufferedImage memeImage1;
+    private BufferedImage memeImage2;
+
     
     @Override
     public void start(Stage stage) throws Exception {
@@ -23,6 +30,13 @@ public class FadingImage extends Application {
         canvas = new ResizableCanvas(g -> draw(g), mainPane);
         mainPane.setCenter(canvas);
         FXGraphics2D g2d = new FXGraphics2D(canvas.getGraphicsContext2D());
+
+        try {
+            memeImage1 = ImageIO.read(getClass().getResource("/memePicture1.jpg"));
+            memeImage2 = ImageIO.read(getClass().getResource("/memePicture2.jpg"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         new AnimationTimer() {
             long last = -1;
             @Override
@@ -46,6 +60,11 @@ public class FadingImage extends Application {
         graphics.setTransform(new AffineTransform());
         graphics.setBackground(Color.white);
         graphics.clearRect(0, 0, (int)canvas.getWidth(), (int)canvas.getHeight());
+
+        AffineTransform affineTransform = new AffineTransform();
+        affineTransform.scale(1,1);
+        graphics.drawImage(memeImage2, affineTransform, null);
+
     }
     
 
