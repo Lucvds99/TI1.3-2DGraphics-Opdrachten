@@ -101,10 +101,8 @@ public class BlockDrag extends Application {
             Area block = new Area(new Rectangle2D.Double(-50, -50 , width, height));
             Point2D point2D = new Point2D.Double(x , y );
             Color color = (Color.getHSBColor((float) (Math.random() * 256), 0.7f, 1));
-
             Renderable renderable = new Renderable(block, point2D, 0, 1, color );
             renderables.add(renderable);
         }
     }
-
 }

@@ -21,6 +21,12 @@ public class FadingImage extends Application {
     private ResizableCanvas canvas;
     private BufferedImage memeImage1;
     private BufferedImage memeImage2;
+    private float blending;
+    private float amountToBlend = 0.001f;
+    private Boolean switchBack = false;
+
+    private FXGraphics2D g2d;
+    private double deltaTimer;
 
     
     @Override
@@ -29,7 +35,7 @@ public class FadingImage extends Application {
         BorderPane mainPane = new BorderPane();
         canvas = new ResizableCanvas(g -> draw(g), mainPane);
         mainPane.setCenter(canvas);
-        FXGraphics2D g2d = new FXGraphics2D(canvas.getGraphicsContext2D());
+        g2d = new FXGraphics2D(canvas.getGraphicsContext2D());
 
         try {
             memeImage1 = ImageIO.read(getClass().getResource("/memePicture1.jpg"));
@@ -37,6 +43,8 @@ public class FadingImage extends Application {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+
         new AnimationTimer() {
             long last = -1;
             @Override
@@ -47,6 +55,7 @@ public class FadingImage extends Application {
 		last = now;
 		draw(g2d);
             }
+
         }.start();
         
         stage.setScene(new Scene(mainPane));
@@ -60,16 +69,23 @@ public class FadingImage extends Application {
         graphics.setTransform(new AffineTransform());
         graphics.setBackground(Color.white);
         graphics.clearRect(0, 0, (int)canvas.getWidth(), (int)canvas.getHeight());
-
-        AffineTransform affineTransform = new AffineTransform();
-        affineTransform.scale(1,1);
-        graphics.drawImage(memeImage2, affineTransform, null);
+        graphics.setComposite(AlphaComposite.getInstance(AlphaComposite.CLEAR, blending));
+        graphics.drawImage(memeImage1, 0, 0, 1920, 1080, null);
+        graphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, blending));
+        graphics.drawImage(memeImage2, 0, 0, 1920, 1080, null);
 
     }
-    
 
     public void update(double deltaTime) {
-	
+        if (blending>=1.00f)
+            switchBack = true;
+        if (blending<=0.00f)
+            switchBack = false;
+
+        if (switchBack)
+            blending -= amountToBlend;
+        else
+            blending+=amountToBlend;
     }
 
     public static void main(String[] args) {
