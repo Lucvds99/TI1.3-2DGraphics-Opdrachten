@@ -54,11 +54,7 @@ public class BlockDrag extends Application {
             graphics.fill(renderable.getTransformedShape());
             renderable.draw(graphics);
         }
-
-
     }
-
-
     public static void main(String[] args)
     {
         launch(BlockDrag.class);
