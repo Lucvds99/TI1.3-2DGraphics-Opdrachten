@@ -1,10 +1,18 @@
 import org.jfree.fx.FXGraphics2D;
+
+import java.awt.*;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
+import java.util.Random;
 
 public class DistanceConstraint implements Constraint {
 
     private double distance;
+    private double setDistance;
+    private double adjustmentDistance;
+    private double distanceDiffrence;
+
+    private Color color;
     private Particle a;
     private Particle b;
 
@@ -13,16 +21,40 @@ public class DistanceConstraint implements Constraint {
     }
 
     public DistanceConstraint(Particle a, Particle b, double distance) {
+        this.color = Color.GREEN;
         this.a = a;
         this.b = b;
         this.distance = distance;
+        this.setDistance = distance;
+
+    }
+
+    public Color getColor(double distanceDifference) {
+
+//        System.out.println(distanceDifference);
+        if (distanceDifference <= 0) {
+            return Color.RED;
+        }
+        else {
+            try {
+                double factor = distanceDifference / setDistance;
+                int greenValue = (int) (255 * (1 - factor));
+                int redValue = (int) (255 * factor);
+                return new Color(redValue, greenValue, 0);
+            }catch (IllegalAccessError e){
+                return Color.red;
+            }catch (IllegalArgumentException e){
+                return Color.red;
+            }
+        }
     }
 
     @Override
     public void satisfy() {
-
         double currentDistance = a.getPosition().distance(b.getPosition());
-        double adjustmentDistance = (currentDistance - distance) / 2;
+
+        adjustmentDistance = (currentDistance - distance) / 2;
+
 
         Point2D BA = new Point2D.Double(b.getPosition().getX() - a.getPosition().getX(), b.getPosition().getY() - a.getPosition().getY());
         double length = BA.distance(0, 0);
@@ -37,10 +69,14 @@ public class DistanceConstraint implements Constraint {
                 a.getPosition().getY() + BA.getY() * adjustmentDistance));
         b.setPosition(new Point2D.Double(b.getPosition().getX() - BA.getX() * adjustmentDistance,
                 b.getPosition().getY() - BA.getY() * adjustmentDistance));
+
+
     }
 
     @Override
     public void draw(FXGraphics2D g2d) {
+        g2d.setColor(getColor(adjustmentDistance));
         g2d.draw(new Line2D.Double(a.getPosition(), b.getPosition()));
     }
 }
+
