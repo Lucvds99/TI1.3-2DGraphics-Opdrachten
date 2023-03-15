@@ -1,3 +1,4 @@
+package comon;
 
 import javafx.event.EventHandler;
 import javafx.scene.Node;
@@ -7,12 +8,15 @@ import org.dyn4j.dynamics.Body;
 import org.dyn4j.dynamics.DetectResult;
 import org.dyn4j.dynamics.World;
 import org.dyn4j.dynamics.joint.MotorJoint;
-import org.dyn4j.geometry.*;
+import org.dyn4j.geometry.Convex;
+import org.dyn4j.geometry.Geometry;
+import org.dyn4j.geometry.MassType;
+import org.dyn4j.geometry.Transform;
 
 import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
-import java.util.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**

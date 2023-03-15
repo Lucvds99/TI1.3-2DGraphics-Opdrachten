@@ -26,26 +26,28 @@ public class DistanceConstraint implements Constraint {
         this.b = b;
         this.distance = distance;
         this.setDistance = distance;
-
     }
 
     public Color getColor(double distanceDifference) {
-
-//        System.out.println(distanceDifference);
         if (distanceDifference <= 0) {
             return Color.RED;
-        }
-        else {
-            try {
-                double factor = distanceDifference / setDistance;
-                int greenValue = (int) (255 * (1 - factor));
-                int redValue = (int) (255 * factor);
-                return new Color(redValue, greenValue, 0);
-            }catch (IllegalAccessError e){
-                return Color.red;
-            }catch (IllegalArgumentException e){
-                return Color.red;
+        } else {
+            double factor = distanceDifference / setDistance;
+            int greenValue = (int) (255 * (1 - factor));
+            int redValue = (int) (255 * factor);
+
+            if (greenValue > 255)
+                greenValue = 255;
+            else if (greenValue < 0) {
+                greenValue = 0;
             }
+            if (redValue > 255)
+                redValue = 255;
+            else if (redValue<0) {
+                redValue = 0;
+            }
+
+            return new Color(redValue, greenValue, 0);
         }
     }
 
@@ -55,11 +57,9 @@ public class DistanceConstraint implements Constraint {
 
         adjustmentDistance = (currentDistance - distance) / 2;
 
-
         Point2D BA = new Point2D.Double(b.getPosition().getX() - a.getPosition().getX(), b.getPosition().getY() - a.getPosition().getY());
         double length = BA.distance(0, 0);
-        if (length > 0.0001) // We kunnen alleen corrigeren als we een richting hebben
-        {
+        if (length > 0.0001) {
             BA = new Point2D.Double(BA.getX() / length, BA.getY() / length);
         } else {
             BA = new Point2D.Double(1, 0);
@@ -69,8 +69,6 @@ public class DistanceConstraint implements Constraint {
                 a.getPosition().getY() + BA.getY() * adjustmentDistance));
         b.setPosition(new Point2D.Double(b.getPosition().getX() - BA.getX() * adjustmentDistance,
                 b.getPosition().getY() - BA.getY() * adjustmentDistance));
-
-
     }
 
     @Override
