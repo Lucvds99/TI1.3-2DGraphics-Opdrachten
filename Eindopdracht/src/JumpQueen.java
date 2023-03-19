@@ -6,6 +6,9 @@ import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.CheckBox;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import org.dyn4j.dynamics.Body;
@@ -27,15 +30,18 @@ import java.util.Vector;
 public class JumpQueen extends Application {
 
     private ResizableCanvas canvas;
+
     private World world;
     private MousePicker mousePicker;
     private Camera camera;
     private boolean debugSelected = false;
     private FXGraphics2D g2d;
+
+    private double spaceHold;
     private ArrayList<GameObject> gameObjects = new ArrayList<>();
     private boolean spaceKeyPressed = false;
 
-    
+
     private final Body character = new Body();
 
     @Override
@@ -77,17 +83,68 @@ public class JumpQueen extends Application {
         stage.setTitle("JumpQueen");
         stage.show();
         draw(g2d);
+
+        canvas.requestFocus();
+    }
+
+    private void spaceKey() {
+        System.out.println(spaceHold);
+        if (spaceHold > 3){
+            spaceHold = 3;
+        }else {
+            spaceHold += 0.5;
+        }
+    }
+
+    private void spaceKeyRelease() {
+        character.applyForce(new Vector2(0, 100 * spaceHold));
+        spaceHold = 0;
+    }
+
+    private void rightArrow() {
+        character.applyForce(new Vector2(50, 0));
+        if (spaceHold > 3){
+            spaceHold = 3;
+        }else {
+            spaceHold += 0.5;
+        }
+    }
+
+    private void leftArrow() {
+        character.applyForce(new Vector2(-50, 0));
+        if (spaceHold > 3){
+            spaceHold = 3;
+        }else {
+            spaceHold += 0.5;
+        }
     }
 
     public void update(double deltaTime) {
         mousePicker.update(world, camera.getTransform((int) canvas.getWidth(), (int) canvas.getHeight()), 100);
         world.update(deltaTime);
 
+
+        canvas.setOnKeyPressed(event -> {
+            switch (event.getCode()){
+                case LEFT:
+                    leftArrow();
+                    break;
+                case RIGHT:
+                    rightArrow();
+                    break;
+                case SPACE:
+                    spaceKey();
+                    break;
+            }
+        });
+
+        canvas.setOnKeyReleased(event -> {
+            if (event.getCode().equals(KeyCode.SPACE)){
+                spaceKeyRelease();
+            }
+        });
+        canvas.requestFocus();
         character.getTransform().setRotation(0);
-
-
-
-
     }
 
     public void draw(FXGraphics2D graphics) {
@@ -165,19 +222,18 @@ public class JumpQueen extends Application {
             }
         }
 
-        
+
         character.addFixture(Geometry.createRectangle(0.5, 1));
         character.setMass(MassType.NORMAL);
         character.getTransform().setTranslation(0,0);
         character.getFixture(0).setRestitution(0.2);
         character.setAngularDamping(Double.MAX_VALUE);
-        character.getFixture(0).setFriction(15);
-        world.addBody(character);
+        character.getFixture(0).setFriction(0);
+              world.addBody(character);
 
 
 
         gameObjects.add(new GameObject("girl_standing.png", character, new Vector2(0,0), 0.2));
-
     }
 
     public static void main(String[] args) {

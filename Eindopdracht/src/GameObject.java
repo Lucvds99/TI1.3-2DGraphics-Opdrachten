@@ -31,6 +31,15 @@ public class GameObject {
         }
     }
 
+    public Body getBody() {
+        return body;
+    }
+
+    public void setImage(BufferedImage image) {
+        this.image = image;
+    }
+
+
     public GameObject(String imageFile, Body body, Vector2 offset, double scale, Color color) {
         this.body = body;
         this.offset = offset;
