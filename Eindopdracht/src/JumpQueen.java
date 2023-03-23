@@ -102,7 +102,7 @@ public class JumpQueen extends Application {
     }
 
     private void rightArrow() {
-        character.applyForce(new Vector2(50, 0));
+        character.setLinearVelocity(new Vector2(5, character.getLinearVelocity().y));
         if (spaceHold > 3){
             spaceHold = 3;
         }else {
@@ -111,7 +111,7 @@ public class JumpQueen extends Application {
     }
 
     private void leftArrow() {
-        character.applyForce(new Vector2(-50, 0));
+        character.setLinearVelocity(new Vector2(-5, character.getLinearVelocity().y));
         if (spaceHold > 3){
             spaceHold = 3;
         }else {
@@ -222,13 +222,13 @@ public class JumpQueen extends Application {
             }
         }
 
-
+        //character
         character.addFixture(Geometry.createRectangle(0.5, 1));
         character.setMass(MassType.NORMAL);
         character.getTransform().setTranslation(0,0);
         character.getFixture(0).setRestitution(0.2);
         character.setAngularDamping(Double.MAX_VALUE);
-        character.getFixture(0).setFriction(0);
+        character.getFixture(0).setFriction(10);
               world.addBody(character);
 
 
