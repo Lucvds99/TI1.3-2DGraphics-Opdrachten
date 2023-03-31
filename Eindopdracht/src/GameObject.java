@@ -1,4 +1,3 @@
-
 import org.dyn4j.dynamics.Body;
 import org.dyn4j.geometry.Vector2;
 import org.jfree.fx.FXGraphics2D;
@@ -9,9 +8,6 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
-/**
- * Created by johan on 2017-03-08.
- */
 public class GameObject {
 
     private Body body;
@@ -19,6 +15,8 @@ public class GameObject {
     private Color color;
     private Vector2 offset;
     private double scale;
+    private AffineTransform tx;
+    private boolean flipped;
 
     public GameObject(String imageFile, Body body, Vector2 offset, double scale) {
         this.body = body;
@@ -35,10 +33,13 @@ public class GameObject {
         return body;
     }
 
-    public void setImage(BufferedImage image) {
-        this.image = image;
+    public void setImage(String imageFile) {
+        try {
+            image = ImageIO.read(getClass().getResource(imageFile));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
-
 
     public GameObject(String imageFile, Body body, Vector2 offset, double scale, Color color) {
         this.body = body;
@@ -58,18 +59,30 @@ public class GameObject {
             return;
         }
 
-        AffineTransform tx = new AffineTransform();
+        tx = new AffineTransform();
         tx.translate(body.getTransform().getTranslationX() * 100, body.getTransform().getTranslationY() * 100);
         tx.rotate(body.getTransform().getRotation());
-        tx.scale(scale, -scale);
+        tx.scale(this.scale, -this.scale);
         tx.translate(offset.x, offset.y);
+
+
 
         if (color != null){
             g2d.setColor(color);
         }
 
         tx.translate(-image.getWidth() / 2, -image.getHeight() / 2);
-        g2d.drawImage(image, tx, null);
 
+        g2d.drawImage(image, tx, null);
+    }
+
+    public void flipLeft() {
+
+    }
+
+    public void flipRight() {
+        if (tx.getScaleX() < 0) {
+            tx.scale(-tx.getScaleX(), tx.getScaleY());
+        }
     }
 }

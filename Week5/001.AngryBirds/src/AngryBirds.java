@@ -111,9 +111,6 @@ public class AngryBirds extends Application {
             graphics.setColor(Color.blue);
             DebugDraw.draw(graphics, world, 100);
         }
-
-
-
         graphics.setTransform(originalTransform);
     }
 
@@ -132,15 +129,13 @@ public class AngryBirds extends Application {
         double bodyHeight = 0.25;
         double spacing = 0.05; // spacing between each body
 
-
-
         for(int y = 0; y < 10; y++) {
             for (int x = 0; x < 20-y; x++) {
                 Body box = new Body();
                 box.addFixture(Geometry.createRectangle(bodyWidth, bodyHeight));
 
                 box.setMass(new Mass(new Vector2(0,0), 0.00001,1.0));
-;
+
                 // Calculate the translation for this body
                 double xPos = -2 + x * (bodyWidth + spacing) + (y * 0.5 * (bodyWidth + spacing));
                 double yPos = -4.5 +  y * (bodyHeight + spacing);
@@ -157,7 +152,6 @@ public class AngryBirds extends Application {
         catapult.setMass(MassType.INFINITE);
         world.addBody(catapult);
         gameObjects.add(new GameObject("", catapult, new Vector2(0,0), 1));
-
 
         Body bird = new Body();
         bird.addFixture(Geometry.createCircle(0.15));
