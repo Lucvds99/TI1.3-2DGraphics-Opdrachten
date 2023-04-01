@@ -35,7 +35,7 @@ public class GameObject {
 
     public void setImage(String imageFile) {
         try {
-            image = ImageIO.read(getClass().getResource(imageFile));
+            this.image = ImageIO.read(getClass().getResource(imageFile));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -62,10 +62,13 @@ public class GameObject {
         tx = new AffineTransform();
         tx.translate(body.getTransform().getTranslationX() * 100, body.getTransform().getTranslationY() * 100);
         tx.rotate(body.getTransform().getRotation());
-        tx.scale(this.scale, -this.scale);
+
         tx.translate(offset.x, offset.y);
 
-
+        if (flipped)
+            tx.scale(-this.scale, -this.scale);
+        else
+            tx.scale(this.scale, -this.scale);
 
         if (color != null){
             g2d.setColor(color);
@@ -77,12 +80,10 @@ public class GameObject {
     }
 
     public void flipLeft() {
-
+        flipped = true;
     }
 
     public void flipRight() {
-        if (tx.getScaleX() < 0) {
-            tx.scale(-tx.getScaleX(), tx.getScaleY());
-        }
+       flipped = false;
     }
 }
