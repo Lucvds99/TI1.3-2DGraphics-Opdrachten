@@ -17,6 +17,8 @@ public class GameObject {
     private double scale;
     private AffineTransform tx;
     private boolean flipped;
+    
+    private double heighoffset = 1;
 
     public GameObject(String imageFile, Body body, Vector2 offset, double scale) {
         this.body = body;
@@ -28,17 +30,24 @@ public class GameObject {
             e.printStackTrace();
         }
     }
+    public GameObject(String imageFile, Body body, Vector2 offset, double scale, double heightoffset) {
+        this.body = body;
+        this.offset = offset;
+        this.scale = scale;
+        this.heighoffset = heightoffset;
+        try {
+            image = ImageIO.read(getClass().getResource(imageFile));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     public Body getBody() {
         return body;
     }
 
-    public void setImage(String imageFile) {
-        try {
-            this.image = ImageIO.read(getClass().getResource(imageFile));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public void setImage(BufferedImage image) {
+        this.image = image;
     }
 
     public GameObject(String imageFile, Body body, Vector2 offset, double scale, Color color) {
@@ -68,7 +77,7 @@ public class GameObject {
         if (flipped)
             tx.scale(-this.scale, -this.scale);
         else
-            tx.scale(this.scale, -this.scale);
+            tx.scale(this.scale, -this.scale/heighoffset);
 
         if (color != null){
             g2d.setColor(color);

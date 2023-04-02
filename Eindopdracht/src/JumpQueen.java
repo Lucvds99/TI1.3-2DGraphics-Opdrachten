@@ -1,5 +1,3 @@
-import com.sun.glass.events.KeyEvent;
-import com.sun.xml.internal.ws.api.model.wsdl.WSDLOutput;
 import comon.Camera;
 import comon.DebugDraw;
 import comon.MousePicker;
@@ -7,27 +5,21 @@ import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.CheckBox;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyCodeCombination;
-import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import org.dyn4j.dynamics.Body;
-import org.dyn4j.dynamics.Force;
 import org.dyn4j.dynamics.World;
-import org.dyn4j.dynamics.joint.WeldJoint;
 import org.dyn4j.geometry.Geometry;
 import org.dyn4j.geometry.MassType;
-import org.dyn4j.geometry.Transform;
 import org.dyn4j.geometry.Vector2;
 import org.jfree.fx.FXGraphics2D;
 import org.jfree.fx.ResizableCanvas;
-
-
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Vector;
 
 public class JumpQueen extends Application {
 
@@ -52,12 +44,17 @@ public class JumpQueen extends Application {
     private boolean wasRightArrowPressed = false;
     private long elapsedTime;
 
+
+
+    private BufferedImage jumping;
+    private BufferedImage standing;
+    private BufferedImage flying;
+
     public static void main(String[] args) {
         launch(JumpQueen.class);
     }
 
     public void start(Stage stage) throws Exception {
-
         BorderPane mainPane = new BorderPane();
 
         // Add debug button
@@ -105,7 +102,7 @@ public class JumpQueen extends Application {
             System.out.println("Left arrow key held down for " + elapsedTime + " ms");
             if (elapsedTime > 0) {
                 elapsedTime = elapsedTime / 5;
-                character.applyForce(new Vector2(-200 + -elapsedTime, -elapsedTime));
+                character.applyForce(new Vector2(-100 + -elapsedTime, -elapsedTime));
             }
             leftArrowDownTime = 0;
             elapsedTime = 0;
@@ -120,7 +117,7 @@ public class JumpQueen extends Application {
             System.out.println("Right arrow key held down for " + elapsedTime + " ms");
             if (elapsedTime > 0) {
                 elapsedTime = elapsedTime / 5;
-                character.applyForce(new Vector2(200 + elapsedTime, -elapsedTime));
+                character.applyForce(new Vector2(100 + elapsedTime, -elapsedTime));
             }
             elapsedTime = 0;
             rightArrowDownTime = 0;
@@ -132,6 +129,18 @@ public class JumpQueen extends Application {
         world.update(deltaTime);
         character.getTransform().setRotation(0);
 
+        //select right image on movement.
+        if(!(character.getLinearVelocity().y < 0.5 && character.getLinearVelocity().x < 0.5)){
+            characterObject.setImage(flying);
+        } else if (isRightArrowPressed || isLeftArrowPressed) {
+            characterObject.setImage(jumping);
+        } else{
+            characterObject.setImage(standing);
+        }
+
+        System.out.println(character.getLinearVelocity().y);
+        System.out.println(character.getLinearVelocity().x);
+        System.out.println("//////////////////////");
 
         canvas.setOnKeyPressed(event -> {
             switch (event.getCode()) {
@@ -167,7 +176,6 @@ public class JumpQueen extends Application {
             if (rightArrowDownTime < 20)
                 jumpRight();
         }
-
         // Jump left or right when arrow key is released
         if (!isLeftArrowPressed && wasLeftArrowPressed) {
             jumpLeft();
@@ -176,12 +184,10 @@ public class JumpQueen extends Application {
         if (!isRightArrowPressed && wasRightArrowPressed) {
             jumpRight();
         }
-
         // Update arrow key status for next frame
         wasLeftArrowPressed = isLeftArrowPressed;
         wasRightArrowPressed = isRightArrowPressed;
     }
-
     public void draw(FXGraphics2D graphics) {
         graphics.setTransform(new AffineTransform());
         graphics.setBackground(Color.gray);
@@ -203,7 +209,6 @@ public class JumpQueen extends Application {
         }
         graphics.setTransform(originalTransform);
     }
-
     public void init() {
         world = new World();
         world.setGravity(new Vector2(0, -9.8));
@@ -211,6 +216,14 @@ public class JumpQueen extends Application {
         double bodyWidth = 1;
         double bodyHeight = 1;
         double spacing = -0.001;
+
+        try {
+            jumping = ImageIO.read(getClass().getResource("girl_jumping.png"));
+            standing = ImageIO.read(getClass().getResource("girl_standing.png"));
+            flying = ImageIO.read(getClass().getResource("girl_flying.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         //floor
         for (int y = 0; y < 1; y++) {
@@ -264,17 +277,11 @@ public class JumpQueen extends Application {
         character.setAngularDamping(Double.POSITIVE_INFINITY);
         character.getFixture(0).setFriction(10);
         world.addBody(character);
-        characterObject = new GameObject("girl_standing.png", character, new Vector2(0, 0), 0.2);
+        characterObject = new GameObject("", character, new Vector2(0, 0), 0.2);
 
         gameObjects.add(characterObject);
     }
-
-
-
-
-
-
-    public void lvl1(){
+    public void lvl1() {
         double bodyWidth = 1;
         double bodyHeight = 1;
         double spacing = -0.001;
@@ -283,7 +290,7 @@ public class JumpQueen extends Application {
         for (int y = 0; y < 1; y++) {
             for (int x = 0; x < 13; x++) {
                 Body boundryBlock = new Body();
-                boundryBlock.addFixture(Geometry.createRectangle(bodyWidth, bodyHeight));
+                boundryBlock.addFixture(Geometry.createRectangle(bodyWidth, bodyHeight / 2));
                 boundryBlock.setMass(MassType.INFINITE);
 
                 double xPos = -8 + x * (bodyWidth + spacing) + (y * 2 * (bodyWidth + spacing));
@@ -292,23 +299,24 @@ public class JumpQueen extends Application {
                 boundryBlock.getTransform().setTranslation(xPos, yPos);
                 world.addBody(boundryBlock);
 
-                gameObjects.add(new GameObject("wall.jpg", boundryBlock, new Vector2(0, 0), 0.13));
+                gameObjects.add(new GameObject("wall.jpg", boundryBlock, new Vector2(0, 0), 0.13, 2));
             }
         }
 
         for (int y = 0; y < 1; y++) {
             for (int x = 0; x < 13; x++) {
                 Body boundryBlock = new Body();
-                boundryBlock.addFixture(Geometry.createRectangle(bodyWidth, bodyHeight));
+                boundryBlock.addFixture(Geometry.createRectangle(bodyWidth, bodyHeight / 2));
                 boundryBlock.setMass(MassType.INFINITE);
 
                 double xPos = -4 + x * (bodyWidth + spacing) + (y * 2 * (bodyWidth + spacing));
                 double yPos = 1 + y * (bodyHeight + spacing);
 
                 boundryBlock.getTransform().setTranslation(xPos, yPos);
+                boundryBlock.getFixture(0).setFriction(0);
                 world.addBody(boundryBlock);
 
-                gameObjects.add(new GameObject("wall.jpg", boundryBlock, new Vector2(0, 0), 0.13));
+                gameObjects.add(new GameObject("wall.jpg", boundryBlock, new Vector2(0, 0), 0.13, 2));
             }
         }
     }
