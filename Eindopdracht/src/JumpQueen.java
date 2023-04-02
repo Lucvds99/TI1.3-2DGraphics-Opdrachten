@@ -20,6 +20,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.concurrent.BlockingDeque;
 
 public class JumpQueen extends Application {
 
@@ -179,7 +180,6 @@ public class JumpQueen extends Application {
         // Jump left or right when arrow key is released
         if (!isLeftArrowPressed && wasLeftArrowPressed) {
             jumpLeft();
-
         }
         if (!isRightArrowPressed && wasRightArrowPressed) {
             jumpRight();
@@ -280,6 +280,18 @@ public class JumpQueen extends Application {
         characterObject = new GameObject("", character, new Vector2(0, 0), 0.2);
 
         gameObjects.add(characterObject);
+
+
+//        character.addFixture(Geometry.createRectangle(0.5, 1));
+//        character.setMass(MassType.NORMAL);
+//        character.getTransform().setTranslation(-7, 1);
+//        character.getFixture(0).setRestitution(0.2);
+//        character.setAngularDamping(Double.POSITIVE_INFINITY);
+//        character.getFixture(0).setFriction(10);
+//        world.addBody(character);
+//        characterObject = new GameObject("", character, new Vector2(0, 0), 0.2);
+//
+//        gameObjects.add(characterObject);
     }
     public void lvl1() {
         double bodyWidth = 1;
@@ -288,28 +300,64 @@ public class JumpQueen extends Application {
 
         // level 1
         for (int y = 0; y < 1; y++) {
-            for (int x = 0; x < 13; x++) {
+            for (int x = 0; x < 12; x++) {
                 Body boundryBlock = new Body();
                 boundryBlock.addFixture(Geometry.createRectangle(bodyWidth, bodyHeight / 2));
                 boundryBlock.setMass(MassType.INFINITE);
 
-                double xPos = -8 + x * (bodyWidth + spacing) + (y * 2 * (bodyWidth + spacing));
-                double yPos = -2 + y * (bodyHeight + spacing);
+                if (x == 1 )
+                    continue;
 
+                double xPos = -7 + x * (bodyWidth + spacing) + (y * 2 * (bodyWidth + spacing));
+                double yPos = -2 + y * (bodyHeight + spacing);
                 boundryBlock.getTransform().setTranslation(xPos, yPos);
                 world.addBody(boundryBlock);
-
                 gameObjects.add(new GameObject("wall.jpg", boundryBlock, new Vector2(0, 0), 0.13, 2));
             }
         }
 
+        //land platform
+        Body addedBlock = new Body();
+        addedBlock.addFixture(Geometry.createRectangle(bodyWidth, bodyHeight / 2));
+        addedBlock.setMass(MassType.INFINITE);
+        addedBlock.getTransform().setTranslation(-9  * (bodyWidth + spacing) + ( 2 * (bodyWidth + spacing)), 0  * (bodyHeight + spacing));
+        world.addBody(addedBlock);
+        gameObjects.add(new GameObject("wall.jpg", addedBlock, new Vector2(0, 0), 0.13, 2));
+
+        //anti bounce platform
+        Body antiBouncePlatform = new Body();
+        antiBouncePlatform.addFixture(Geometry.createRectangle(0.1, bodyHeight));
+        antiBouncePlatform.setMass(MassType.INFINITE);
+        world.addBody(antiBouncePlatform);
+        antiBouncePlatform.getTransform().setTranslation(-9.4  * (bodyWidth + spacing) + ( 2 * (bodyWidth + spacing)), 1  * (bodyHeight + spacing));
+        gameObjects.add(new GameObject("", antiBouncePlatform, new Vector2(0, 0), 0.13));
+
+        //end guards for finish
+        Body endGuard = new Body();
+        endGuard.addFixture(Geometry.createRectangle(0.1, bodyHeight * 2));
+        endGuard.setMass(MassType.INFINITE);
+        world.addBody(endGuard);
+        endGuard.getFixture(0).setRestitution(0);
+        endGuard.getFixture(0).setFriction(Float.MAX_VALUE);
+        endGuard.getTransform().setTranslation(-0.5 * (bodyWidth + spacing) + ( 2 * (bodyWidth + spacing)), 7 * (bodyHeight + spacing));
+        gameObjects.add(new GameObject("", endGuard, new Vector2(0,0), 0,13));
+
+        //end platform
+        Body endplatform = new Body();
+        endplatform.addFixture(Geometry.createRectangle(bodyWidth, bodyHeight / 2));
+        endplatform.setMass(MassType.INFINITE);
+        endplatform.getFixture(0).setFriction(Float.MAX_VALUE);
+        world.addBody(endplatform);
+        endplatform.getTransform().setTranslation(-1  * (bodyWidth + spacing) + ( 2 * (bodyWidth + spacing)), 3  * (bodyHeight + spacing));
+        gameObjects.add(new GameObject("wall.jpg", endplatform, new Vector2(0, 0), 0.13, 2));
+
         for (int y = 0; y < 1; y++) {
-            for (int x = 0; x < 13; x++) {
+            for (int x = 0; x < 9; x++) {
                 Body boundryBlock = new Body();
                 boundryBlock.addFixture(Geometry.createRectangle(bodyWidth, bodyHeight / 2));
                 boundryBlock.setMass(MassType.INFINITE);
 
-                double xPos = -4 + x * (bodyWidth + spacing) + (y * 2 * (bodyWidth + spacing));
+                double xPos = -3 + x * (bodyWidth + spacing) + (y * 2 * (bodyWidth + spacing));
                 double yPos = 1 + y * (bodyHeight + spacing);
 
                 boundryBlock.getTransform().setTranslation(xPos, yPos);
